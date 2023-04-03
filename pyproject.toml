@@ -34,6 +34,8 @@ dynamic = ["version"]
 
 [project.optional-dependencies]
 dev = [
+  "pre-commit",
+  "mypy",
   "pytest",
   "httpx",
 ]
@@ -75,3 +77,13 @@ exclude_lines = [
 
 [tool.black]
 line-length = 120
+
+[tool.pylint.'MESSAGES CONTROL']
+max-line-length=120
+disable = [
+  "fixme",
+  "line-too-long",
+  "missing-class-docstring",
+  "missing-module-docstring",
+  "consider-iterating-dictionary",  # horrible style imho :)
+]

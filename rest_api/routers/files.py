@@ -29,21 +29,21 @@ def upload_file(path: Optional[Path] = None, file: UploadFile = File(...)):
     You can reference them with the path after upload within the REST API,
     for example as `/files/<path>/<filename>`.
     """
-    if not path:
-        path = file.filename
+    if path:
+        full_path = FILE_UPLOAD_PATH / path
+    else:
+        full_path = FILE_UPLOAD_PATH / file.filename
 
-    path = FILE_UPLOAD_PATH / path
+    if not os.path.exists(full_path.parent):
+        logger.info("Creating %s", full_path.parent.absolute())
+        os.makedirs(full_path.parent)
 
-    if not os.path.exists(path.parent):
-        logger.info("Creating %s", path.parent.absolute())
-        os.makedirs(path.parent)
-
-    if os.path.exists(Path(path)):
+    if os.path.exists(Path(full_path)):
         raise HTTPException(
             status_code=409, detail="A file with the same name already exist. Rename it and try again."  # 409 Conflict
         )
     try:
-        file_path = Path(path)
+        file_path = Path(full_path)
         with file_path.open("wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
     finally:
@@ -63,18 +63,17 @@ def list_files(path: Path = Path(".")):
         logger.info("Creating %s", FILE_UPLOAD_PATH.absolute())
         os.makedirs(FILE_UPLOAD_PATH)
 
-    path = FILE_UPLOAD_PATH / path
+    full_path = FILE_UPLOAD_PATH / path
 
-    if not os.path.exists(path):
-        raise HTTPException(status_code=404, detail=f"'{path.relative_to(FILE_UPLOAD_PATH)}' does not exist.")
-    
-    if os.path.isfile(path):
-        return FileResponse(path)
+    if not os.path.exists(full_path):
+        raise HTTPException(status_code=404, detail=f"'{full_path.relative_to(FILE_UPLOAD_PATH)}' does not exist.")
 
-    if os.path.isdir(path):
-        return [
-            filename.name
-            for filename in list(Path(path).iterdir())
-        ]
+    if os.path.isfile(full_path):
+        return FileResponse(full_path)
 
-    raise HTTPException(status_code=500, detail=f"'{path.relative_to(FILE_UPLOAD_PATH)}' is neither a file nor a directory.")
+    if os.path.isdir(full_path):
+        return [filename.name for filename in list(Path(full_path).iterdir())]
+
+    raise HTTPException(
+        status_code=500, detail=f"'{full_path.relative_to(FILE_UPLOAD_PATH)}' is neither a file nor a directory."
+    )

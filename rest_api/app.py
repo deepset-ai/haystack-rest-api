@@ -3,21 +3,19 @@
 # SPDX-License-Identifier: Apache-2.0
 from typing import Optional
 
-from pathlib import Path
-
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
-from canals import load_pipelines
 from haystack import __version__
-
-from rest_api.config import DEFAULT_PIPELINES
 
 
 async def http_error_handler(_: Request, exc: HTTPException) -> JSONResponse:
+    """
+    Converts HTTP errors into JSON responses carrying the error messages.
+    """
     return JSONResponse({"errors": [exc.detail]}, status_code=exc.status_code)
 
 
-app = None
+app: Optional[FastAPI] = None
 OPENAPI_TAGS = [
     {"name": "about", "description": "Check the app's status"},
     {"name": "pipelines", "description": "Operations on Pipelines: list, warmup, run, etc..."},
@@ -25,9 +23,12 @@ OPENAPI_TAGS = [
 ]
 
 
-def get_app(debug: bool = False, pipelines_path: Optional[Path] = None) -> None:
+def get_app(debug: bool = False) -> FastAPI:
+    """
+    Returns the FastAPI object. If not existing, initializes it.
+    """
     global app  # pylint: disable=global-statement
-    if not app:    
+    if not app:
         app = FastAPI(
             title="Haystack",
             debug=debug,
@@ -35,13 +36,14 @@ def get_app(debug: bool = False, pipelines_path: Optional[Path] = None) -> None:
             root_path="/",
             openapi_tags=OPENAPI_TAGS,
         )
-        app.pipelines = load_pipelines(pipelines_path or DEFAULT_PIPELINES)
 
-        from rest_api.routers import pipelines, about, files
+        from rest_api.routers.pipelines import router as pipelines_router  # pylint: disable=C0415
+        from rest_api.routers.files import router as files_router  # pylint: disable=C0415
+        from rest_api.routers.about import router as about_router  # pylint: disable=C0415
 
-        app.include_router(pipelines.router, tags=["pipelines"])
-        app.include_router(files.router, tags=["files"])
-        app.include_router(about.router, tags=["about"])
+        app.include_router(pipelines_router, tags=["pipelines"])
+        app.include_router(files_router, tags=["files"])
+        app.include_router(about_router, tags=["about"])
 
         app.add_exception_handler(HTTPException, http_error_handler)
 
