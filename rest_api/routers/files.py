@@ -33,7 +33,7 @@ def upload_file(path: Optional[Path] = None, file: UploadFile = File(...)):
     if path:
         full_path = FILE_UPLOAD_PATH / path
     else:
-        full_path = FILE_UPLOAD_PATH / file.filename
+        full_path = FILE_UPLOAD_PATH / (file.filename or "")
 
     if not os.path.exists(full_path.parent):
         logger.info("Creating %s", full_path.parent.absolute())
