@@ -87,7 +87,7 @@ jobs:
           fi
 
   tests:
-    name: Unit / ${{ matrix.os }}
+    name: Tests / ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
