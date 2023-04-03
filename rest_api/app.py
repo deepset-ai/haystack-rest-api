@@ -3,9 +3,8 @@
 # SPDX-License-Identifier: Apache-2.0
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
-from starlette.requests import Request
-from starlette.responses import JSONResponse
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 from canals import load_pipelines
 
 from haystack import __version__
