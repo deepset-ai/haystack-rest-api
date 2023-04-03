@@ -4,7 +4,7 @@
 import logging
 
 import uvicorn
-from haystack.preview.rest_api.app import get_app
+from rest_api.app import get_app
 
 
 if __name__ == "__main__":

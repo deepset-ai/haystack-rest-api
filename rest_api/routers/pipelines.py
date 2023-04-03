@@ -9,12 +9,11 @@ import json
 
 from fastapi import APIRouter, HTTPException
 
-from haystack.preview.rest_api.app import get_app
+from rest_api.app import app
 
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
-app = get_app()
 
 
 @router.get("/pipelines")
@@ -40,7 +39,7 @@ def warmup_all():
         )
 
 
-@router.post("/pipelines/warmup/{pipeline_name}")
+@router.post("/pipelines/{pipeline_name}/warmup")
 def warmup(pipeline_name: str):
     """
     Warm up the specified pipeline.
@@ -62,7 +61,7 @@ def warmup(pipeline_name: str):
     )
 
 
-@router.post("/pipelines/run/{pipeline_name}")
+@router.post("/pipelines/{pipeline_name}/run")
 def run(pipeline_name: str, data: Dict[str, Any], parameters: Dict[str, Dict[str, Any]], debug: bool = False):
     """
     Runs a pipeline. Provide the same values for `data` and `parameters` as you would in Canals or Haystack.

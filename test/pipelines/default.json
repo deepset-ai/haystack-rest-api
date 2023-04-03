@@ -36,5 +36,5 @@
             ]
         }
     },
-    "dependencies": ["test.rest_api.nodes"]
+    "dependencies": ["test.nodes"]
 }

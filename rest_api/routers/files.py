@@ -1,34 +1,37 @@
 # SPDX-FileCopyrightText: 2022-present deepset GmbH <info@deepset.ai>
 #
 # SPDX-License-Identifier: Apache-2.0
+from typing import Optional
 import os
 import logging
 import shutil
 from pathlib import Path
 
-from fastapi import FastAPI, APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException
 from fastapi.responses import FileResponse
 
-from haystack.preview.rest_api.app import get_app
-from haystack.preview.rest_api.config import FILE_UPLOAD_PATH
+from rest_api.config import FILE_UPLOAD_PATH
 
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
-app: FastAPI = get_app()
 
 
-@router.post("/files/upload/{path:path}")
-def upload_file(path: Path, file: UploadFile = File(...)):
+@router.post("/files")
+@router.post("/files/{path:path}")
+def upload_file(path: Optional[Path] = None, file: UploadFile = File(...)):
     """
     You can use this endpoint to upload a file. It gets stored in an internal folder, ready
     to be used by Pipelines. The folder where the files are stored can be configured
-    through the env var `haystack.v2.rest_api_FILE_UPLOAD_PATH` and defaults to the `files/` folder
-    under the haystack.v2.rest_api installation path.
+    through the env var `HAYSTACK_REST_API_FILE_UPLOAD_PATH` and defaults to the `files/` folder
+    under the installation path.
 
     You can reference them with the path after upload within the REST API,
-    for example as `/files/<folder>/<filename>`.
+    for example as `/files/<path>/<filename>`.
     """
+    if not path:
+        path = file.filename
+
     path = FILE_UPLOAD_PATH / path
 
     if not os.path.exists(path.parent):
@@ -47,11 +50,14 @@ def upload_file(path: Path, file: UploadFile = File(...)):
         file.file.close()
 
 
-@router.get("/files/list")
-@router.get("/files/list/{path:path}")
+@router.get("/files")
+@router.get("/files/{path:path}")
 def list_files(path: Path = Path(".")):
     """
-    Returns a list of the uploaded files at the given path.
+    Browse the uploaded files.
+
+    If the path points to a folder, it returns a list of what it contains (folders and filenames).
+    If the path points to a file, it serves the file.
     """
     if not os.path.exists(FILE_UPLOAD_PATH):
         logger.info("Creating %s", FILE_UPLOAD_PATH.absolute())
@@ -60,32 +66,15 @@ def list_files(path: Path = Path(".")):
     path = FILE_UPLOAD_PATH / path
 
     if not os.path.exists(path):
-        raise HTTPException(status_code=404, detail=f"The path '{path.relative_to(FILE_UPLOAD_PATH)}' does not exist.")
+        raise HTTPException(status_code=404, detail=f"'{path.relative_to(FILE_UPLOAD_PATH)}' does not exist.")
+    
+    if os.path.isfile(path):
+        return FileResponse(path)
 
-    if not os.path.isdir(path):
-        raise HTTPException(status_code=404, detail=f"'{path.relative_to(FILE_UPLOAD_PATH)}' is not a directory.")
-
-    return {
-        "files": [
+    if os.path.isdir(path):
+        return [
             filename.name
             for filename in list(Path(path).iterdir())
-            if filename.is_file() and filename.name != ".gitignore"
-        ],
-        "folders": [folder.name for folder in list(Path(path).iterdir()) if folder.is_dir()],
-    }
+        ]
 
-
-@router.get("/files/download/{path:path}")
-def download_file(path: Path = Path(".")):
-    """
-    You can use this endpoint to download a file.
-
-    You can reference them with the path after upload within the REST API,
-    for example as `/files/<folder>/<filename>`.
-    """
-    path = FILE_UPLOAD_PATH / path
-
-    if not os.path.exists(path):
-        raise HTTPException(status_code=404, detail=f"'{path.relative_to(FILE_UPLOAD_PATH)}' does not exist.")
-
-    return FileResponse(path)
+    raise HTTPException(status_code=500, detail=f"'{path.relative_to(FILE_UPLOAD_PATH)}' is neither a file nor a directory.")

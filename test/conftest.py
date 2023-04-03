@@ -3,12 +3,12 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-import haystack.preview.rest_api.app as app_module
+import test.nodes  # pylint: disable    # contains the test nodes
+from rest_api.app import get_app
 
 
 @pytest.fixture(autouse=True)
-def client(monkeypatch):
-    monkeypatch.setattr(app_module, "DEFAULT_PIPELINES", Path(__file__).parent / "pipelines" / "default.json")
-    app = app_module.get_app()
+def client():    
+    app = get_app(pipelines_path=Path(__file__).parent / "pipelines" / "default.json")
     client = TestClient(app)
     return client
