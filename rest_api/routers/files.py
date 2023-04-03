@@ -29,6 +29,7 @@ def upload_file(path: Optional[Path] = None, file: UploadFile = File(...)):
     You can reference them with the path after upload within the REST API,
     for example as `/files/<path>/<filename>`.
     """
+    full_path: Path
     if path:
         full_path = FILE_UPLOAD_PATH / path
     else:

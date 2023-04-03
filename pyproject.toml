@@ -36,6 +36,9 @@ dynamic = ["version"]
 dev = [
   "pre-commit",
   "mypy",
+  "pylint",
+  "black",
+  "hatch",
   "pytest",
   "httpx",
 ]
