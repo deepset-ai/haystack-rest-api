@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  elasticsearch:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:8.10.0"
+    ports:
+      - 9200:9200
+    restart: on-failure
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
+    healthcheck:
+        test: curl --fail http://localhost:9200/_cat/health || exit 1
+        interval: 10s
+        timeout: 1s
+        retries: 10
+
+  rest-api:
+    build:
+      context: .
+    image: my-rest-api
+    ports:
+      - 8000:8000
+    restart: on-failure
+    environment:
+      - DOCUMENTSTORE_PARAMS_HOST=http://elasticsearch:9200
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
