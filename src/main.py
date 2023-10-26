@@ -3,15 +3,18 @@ from pathlib import Path
 import os
 import uuid
 
-
 from fastapi import FastAPI, UploadFile, File
-
-from src.pipelines import create_indexing_pipeline, create_rag_pipeline
+from haystack.preview import Pipeline
 
 app = FastAPI(title="My Haystack RAG API")
-indexing_pipeline = create_indexing_pipeline()
-rag_pipeline = create_rag_pipeline()
 
+# Load the pipelines from the YAML files
+with open("./src/pipelines/indexing_pipeline.yaml", "rb") as f:
+    indexing_pipeline = Pipeline.load(f)
+with open("./src/pipelines/rag_pipeline.yaml", "rb") as f:
+    rag_pipeline = Pipeline.load(f)
+
+# Create the file upload directory if it doesn't exist
 FILE_UPLOAD_PATH = os.getenv(
     "FILE_UPLOAD_PATH", str((Path(__file__).parent.parent / "file-upload").absolute())
 )

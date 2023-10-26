@@ -1,0 +1,36 @@
+components:
+  cleaner:
+    init_parameters:
+      remove_empty_lines: true
+      remove_extra_whitespaces: true
+      remove_regex: null
+      remove_repeated_substrings: false
+      remove_substrings: null
+    type: DocumentCleaner
+  converter:
+    init_parameters: {}
+    type: PyPDFToDocument
+  splitter:
+    init_parameters:
+      split_by: word
+      split_length: 200
+      split_overlap: 0
+    type: TextDocumentSplitter
+  writer:
+    init_parameters:
+      document_store:
+        init_parameters:
+          hosts: http://localhost:9200
+          index: default
+        type: ElasticsearchDocumentStore
+      policy: SKIP
+    type: DocumentWriter
+connections:
+- receiver: cleaner.documents
+  sender: converter.documents
+- receiver: splitter.documents
+  sender: cleaner.documents
+- receiver: writer.documents
+  sender: splitter.documents
+max_loops_allowed: 100
+metadata: {}

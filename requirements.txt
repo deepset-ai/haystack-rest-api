@@ -1,4 +1,4 @@
-haystack-ai==0.87.0
+haystack-ai
 elasticsearch-haystack @ git+https://github.com/deepset-ai/elasticsearch-haystack.git@d956c19ba905e03769faa2f39f3e64a950d2d7fb
 pypdf
 
