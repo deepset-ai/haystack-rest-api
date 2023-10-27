@@ -6,6 +6,16 @@ import uuid
 from fastapi import FastAPI, UploadFile, File
 from haystack.preview import Pipeline
 
+# Needed to load the Pipeline without errors (https://github.com/deepset-ai/haystack/issues/6186)
+from haystack.preview.components.preprocessors import DocumentCleaner, TextDocumentSplitter
+from haystack.preview.components.file_converters import PyPDFToDocument
+from haystack.preview.components.builders.answer_builder import AnswerBuilder
+from haystack.preview.components.builders.prompt_builder import PromptBuilder
+from haystack.preview.components.generators import GPTGenerator
+from haystack.preview.components.writers import DocumentWriter
+from elasticsearch_haystack.document_store import ElasticsearchDocumentStore
+from elasticsearch_haystack.bm25_retriever import ElasticsearchBM25Retriever
+
 app = FastAPI(title="My Haystack RAG API")
 
 # Load the pipelines from the YAML files
