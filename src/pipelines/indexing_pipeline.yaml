@@ -20,7 +20,7 @@ components:
     init_parameters:
       document_store:
         init_parameters:
-          hosts: http://localhost:9200
+          hosts: http://elasticsearch:9200
           index: default
         type: ElasticsearchDocumentStore
       policy: SKIP

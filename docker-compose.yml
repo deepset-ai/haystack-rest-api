@@ -19,12 +19,10 @@ services:
   rest-api:
     build:
       context: .
-    image: my-rest-api
     ports:
       - 8000:8000
     restart: on-failure
     environment:
-      - DOCUMENTSTORE_PARAMS_HOST=http://elasticsearch:9200
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     depends_on:
       elasticsearch:
