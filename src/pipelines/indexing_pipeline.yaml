@@ -9,11 +9,11 @@ components:
     type: DocumentCleaner
   converter:
     init_parameters: {}
-    type: PyPDFToDocument
+    type: TextFileToDocument
   splitter:
     init_parameters:
       split_by: word
-      split_length: 200
+      split_length: 1000
       split_overlap: 0
     type: TextDocumentSplitter
   writer:

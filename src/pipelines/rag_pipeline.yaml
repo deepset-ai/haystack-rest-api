@@ -13,9 +13,11 @@ components:
     type: GPTGenerator
   prompt_builder:
     init_parameters:
-      template: "\n    Given these documents, answer the question.\nDocuments: \n\
+      template: "Given the context please answer the question.\n
+      If the context does not contain the answer, just say that you don't know.\n
+      Context: \n\
         \    {% for doc in documents %}\n        {{ doc.text }} \n    {% endfor %}\n\
-        \n    \nQuestion: {{question}}\n    \nAnswer:\n    "
+        \n    \nQuestion: {{question}}\n    \nAnswer:\n"
       template_variables: null
     type: PromptBuilder
   retriever:

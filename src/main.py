@@ -7,8 +7,11 @@ from fastapi import FastAPI, UploadFile, File
 from haystack.preview import Pipeline
 
 # Needed to load the Pipeline without errors (https://github.com/deepset-ai/haystack/issues/6186)
-from haystack.preview.components.preprocessors import DocumentCleaner, TextDocumentSplitter
-from haystack.preview.components.file_converters import PyPDFToDocument
+from haystack.preview.components.preprocessors import (
+    DocumentCleaner,
+    TextDocumentSplitter,
+)
+from haystack.preview.components.file_converters import TextFileToDocument
 from haystack.preview.components.builders.answer_builder import AnswerBuilder
 from haystack.preview.components.builders.prompt_builder import PromptBuilder
 from haystack.preview.components.generators import GPTGenerator
@@ -67,7 +70,7 @@ def upload_files(
         finally:
             file_to_upload.file.close()
 
-    result = indexing_pipeline.run({"converter": {"sources": file_paths}})
+    result = indexing_pipeline.run({"converter": {"paths": file_paths}})
 
     # Clean up indexed files
     if not keep_files:
