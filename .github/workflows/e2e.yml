@@ -24,11 +24,11 @@ jobs:
       with:
         python-version: ${{ env.PYTHON_VERSION }}
 
-    - name: Install dependencies used in e2e tests
-      run: pip install requests pytest
-
     - name: Run multi-container application (Elasticsearch + REST API)
       run: docker compose up -d --wait
+
+    - name: Install dependencies used in e2e tests
+      run: pip install requests pytest      
 
     - name: Run tests
       run: pytest test/test_application.py
