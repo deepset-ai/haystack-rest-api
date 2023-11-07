@@ -33,6 +33,6 @@ def test_application():
     assert "data" in answer
     assert "metadata" in answer
 
-    # we check that the Documents have been correctly retrieved and used
+    # check that the Documents have been correctly retrieved and used
     assert "documents" in answer
     assert len(answer["documents"]) > 0
