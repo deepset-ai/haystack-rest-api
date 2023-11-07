@@ -3,7 +3,7 @@ name: end-to-end
 on:
   workflow_dispatch: # Activate this workflow manually
   schedule:
-    - cron: "0 0 * * 1"
+    - cron: "0 0 * * 1"  # Run every Monday at midnight
 
 env:
   PYTHON_VERSION: "3.10"
@@ -14,7 +14,6 @@ jobs:
     timeout-minutes: 60
     strategy:
       fail-fast: false  # Avoid cancelling the others if one of these fails
-
 
     runs-on: ubuntu-latest
 
@@ -29,7 +28,7 @@ jobs:
       run: pip install requests pytest
 
     - name: Run multi-container application (Elasticsearch + REST API)
-      run: docker-compose up -d
+      run: docker-compose up -d --wait
 
     - name: Run tests
       run: pytest e2e/test_application.py
