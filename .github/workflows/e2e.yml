@@ -31,4 +31,4 @@ jobs:
       run: docker-compose up -d
 
     - name: Run tests
-      run: pytest e2e/test_application.py
+      run: pytest test/test_application.py
