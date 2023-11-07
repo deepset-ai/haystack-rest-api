@@ -1,4 +1,5 @@
 haystack-ai==0.109.0
+openai<1.0.0
 
 # for TextFileToDocument
 langdetect
