@@ -6,7 +6,7 @@ def ingest_example_data():
     """
     Call the file-upload endpoint with all the text files in the example-data folder.
     """
-    for txt_file in glob.glob("example-data/*.txt"):
+    for txt_file in glob.glob("example_data/*.txt"):
         print(txt_file)
         with open(txt_file, "rb") as f:
             r = requests.post(
