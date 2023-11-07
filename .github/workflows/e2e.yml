@@ -28,7 +28,7 @@ jobs:
       run: pip install requests pytest
 
     - name: Run multi-container application (Elasticsearch + REST API)
-      run: docker-compose up -d --wait
+      run: docker-compose up -d
 
     - name: Run tests
       run: pytest e2e/test_application.py
