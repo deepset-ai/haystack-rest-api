@@ -13,7 +13,7 @@ components:
   splitter:
     init_parameters:
       split_by: word
-      split_length: 1000
+      split_length: 500
       split_overlap: 0
     type: TextDocumentSplitter
   writer:
