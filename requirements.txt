@@ -1,5 +1,4 @@
-haystack-ai==0.109.0
-openai<1.0.0
+haystack-ai
 
 # for TextFileToDocument
 langdetect

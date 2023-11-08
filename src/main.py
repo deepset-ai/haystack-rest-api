@@ -9,7 +9,7 @@ from haystack.preview import Pipeline
 # Needed to load the Pipeline without errors (https://github.com/deepset-ai/haystack/issues/6186)
 from haystack.preview.components.preprocessors import (
     DocumentCleaner,
-    TextDocumentSplitter,
+    DocumentSplitter,
 )
 from haystack.preview.components.file_converters import TextFileToDocument
 from haystack.preview.components.builders.answer_builder import AnswerBuilder
