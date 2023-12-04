@@ -9,9 +9,7 @@ def ingest_example_data():
     for txt_file in glob.glob("example_data/*.txt"):
         print(txt_file)
         with open(txt_file, "rb") as f:
-            r = requests.post(
-                url="http://127.0.0.1:8000/file-upload", files={"files": f}
-            )
+            r = requests.post(url="http://127.0.0.1:8000/file-upload", files={"files": f})
             print(r.json())
 
 

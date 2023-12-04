@@ -11,9 +11,7 @@ def test_application():
     # test file-upload endpoint (indexing)
     for txt_file in glob.glob("example_data/*.txt"):
         with open(txt_file, "rb") as f:
-            r = requests.post(
-                url="http://127.0.0.1:8000/file-upload", files={"files": f}
-            )
+            r = requests.post(url="http://127.0.0.1:8000/file-upload", files={"files": f})
 
             json_response = r.json()
             assert "writer" in json_response

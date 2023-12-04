@@ -4,20 +4,11 @@ import os
 import uuid
 
 from fastapi import FastAPI, UploadFile, File
-from haystack.preview import Pipeline
+from haystack import Pipeline
 
-# Needed to load the Pipeline without errors (https://github.com/deepset-ai/haystack/issues/6186)
-from haystack.preview.components.preprocessors import (
-    DocumentCleaner,
-    DocumentSplitter,
-)
-from haystack.preview.components.file_converters import TextFileToDocument
-from haystack.preview.components.builders.answer_builder import AnswerBuilder
-from haystack.preview.components.builders.prompt_builder import PromptBuilder
-from haystack.preview.components.generators import GPTGenerator
-from haystack.preview.components.writers import DocumentWriter
+# TODO: Remove this import once the deserialization issue is fixed (https://github.com/deepset-ai/haystack/issues/6473)
 from elasticsearch_haystack.document_store import ElasticsearchDocumentStore
-from elasticsearch_haystack.bm25_retriever import ElasticsearchBM25Retriever
+
 
 app = FastAPI(title="My Haystack RAG API")
 
@@ -28,9 +19,7 @@ with open("./src/pipelines/rag_pipeline.yaml", "rb") as f:
     rag_pipeline = Pipeline.load(f)
 
 # Create the file upload directory if it doesn't exist
-FILE_UPLOAD_PATH = os.getenv(
-    "FILE_UPLOAD_PATH", str((Path(__file__).parent.parent / "file-upload").absolute())
-)
+FILE_UPLOAD_PATH = os.getenv("FILE_UPLOAD_PATH", str((Path(__file__).parent.parent / "file-upload").absolute()))
 Path(FILE_UPLOAD_PATH).mkdir(parents=True, exist_ok=True)
 
 
@@ -47,9 +36,7 @@ def check_status():
 
 
 @app.post("/file-upload")
-def upload_files(
-    files: List[UploadFile] = File(...), keep_files: Optional[bool] = False
-):
+def upload_files(files: List[UploadFile] = File(...), keep_files: Optional[bool] = False):
     """
     Upload a list of files to be indexed.
 
@@ -61,16 +48,14 @@ def upload_files(
 
     for file_to_upload in files:
         try:
-            file_path = (
-                Path(FILE_UPLOAD_PATH) / f"{uuid.uuid4().hex}_{file_to_upload.filename}"
-            )
+            file_path = Path(FILE_UPLOAD_PATH) / f"{uuid.uuid4().hex}_{file_to_upload.filename}"
             with file_path.open("wb") as fo:
                 fo.write(file_to_upload.file.read())
             file_paths.append(file_path)
         finally:
             file_to_upload.file.close()
 
-    result = indexing_pipeline.run({"converter": {"paths": file_paths}})
+    result = indexing_pipeline.run({"converter": {"sources": file_paths}})
 
     # Clean up indexed files
     if not keep_files:

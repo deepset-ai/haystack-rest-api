@@ -3,14 +3,14 @@ components:
     init_parameters:
       pattern: null
       reference_pattern: null
-    type: AnswerBuilder
+    type: haystack.components.builders.answer_builder.AnswerBuilder
   llm:
     init_parameters:
       api_base_url: https://api.openai.com/v1
       model_name: gpt-3.5-turbo
       streaming_callback: null
       system_prompt: null
-    type: GPTGenerator
+    type: haystack.components.generators.openai.GPTGenerator
   prompt_builder:
     init_parameters:
       template: "Given the context please answer the question.\n
@@ -18,19 +18,18 @@ components:
       Context: \n\
         \    {% for doc in documents %}\n        {{ doc.content }} \n    {% endfor %}\n\
         \n    \nQuestion: {{question}}\n    \nAnswer:\n"
-      template_variables: null
-    type: PromptBuilder
+    type: haystack.components.builders.prompt_builder.PromptBuilder
   retriever:
     init_parameters:
       document_store:
         init_parameters:
           hosts: http://elasticsearch:9200
           index: default
-        type: ElasticsearchDocumentStore
+        type: elasticsearch_haystack.document_store.ElasticsearchDocumentStore
       filters: {}
       scale_score: true
       top_k: 5
-    type: ElasticsearchBM25Retriever
+    type: elasticsearch_haystack.bm25_retriever.ElasticsearchBM25Retriever
 connections:
 - receiver: prompt_builder.documents
   sender: retriever.documents

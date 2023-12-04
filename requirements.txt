@@ -1,11 +1,7 @@
 haystack-ai
 
-# for TextFileToDocument
-langdetect
-
-# installing from a branch to temporarily fix changes in Document dataclass
-# (array, id_hash_keys)
-elasticsearch-haystack @ git+https://github.com/deepset-ai/elasticsearch-haystack@rm-array
+# Elasticsearch Document Store
+elasticsearch-haystack
 
 # REST API
 fastapi==0.104.0

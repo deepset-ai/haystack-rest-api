@@ -6,25 +6,25 @@ components:
       remove_regex: null
       remove_repeated_substrings: false
       remove_substrings: null
-    type: DocumentCleaner
+    type: haystack.components.preprocessors.document_cleaner.DocumentCleaner
   converter:
     init_parameters: {}
-    type: TextFileToDocument
+    type: haystack.components.converters.txt.TextFileToDocument
   splitter:
     init_parameters:
       split_by: word
       split_length: 500
       split_overlap: 0
-    type: DocumentSplitter
+    type: haystack.components.preprocessors.document_splitter.DocumentSplitter
   writer:
     init_parameters:
       document_store:
         init_parameters:
           hosts: http://elasticsearch:9200
           index: default
-        type: ElasticsearchDocumentStore
+        type: elasticsearch_haystack.document_store.ElasticsearchDocumentStore
       policy: SKIP
-    type: DocumentWriter
+    type: haystack.components.writers.document_writer.DocumentWriter
 connections:
 - receiver: cleaner.documents
   sender: converter.documents

@@ -1,9 +1,5 @@
 FROM python:3.10-slim
 
-# installing git is only necessary because elasticsearch-haystack is not yet a package
-RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
-
-
 WORKDIR /code
 
 COPY ./requirements.txt /code/requirements.txt
