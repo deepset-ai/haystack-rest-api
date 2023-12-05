@@ -2,19 +2,19 @@
 
 This repository contains a simple Haystack RAG application with a REST API for indexing and querying purposes.
 
-The application comprises two containers:
-- an Elasticsearch container
-- a REST API container: built on FastAPI, this container integrates the Haystack logic. It incorporates:
+The application includes two containers:
+- An Elasticsearch container
+- A REST API container: built on FastAPI, this container integrates the Haystack logic. It incorporates:
   - `ElasticsearchDocumentStore` to store documents
-  - keyword-based `ElasticsearchBM25Retriever` to retrieve relevant documents
-  -  OpenAI `GPTGenerator` to generate answers.
+  - Keyword-based `ElasticsearchBM25Retriever` to retrieve relevant documents
+  - OpenAI `GPTGenerator` to generate answers
 
 You can find more information in the [Haystack documentation](add a link when availaible).
 
 ## Getting started
 Before you begin, make sure you have Python and Docker installed on your system.
 
-- Clone this repository
+- Clone this repository.
 - Set the `OPENAI_API_KEY` environment variable following the instructions [here](https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety#h_a1ab3ba7b2).
 - Spin up the multi-container application (Elasticsearch + REST API) using Docker Compose: 
     ```bash
@@ -28,7 +28,7 @@ Before you begin, make sure you have Python and Docker installed on your system.
 - You can also check REST API interactive documentation at http://localhost:8000/docs.
 
 ## Indexing
-To populate the application with example data about Oceanian countries, run the script:
+To populate the application with example data about Oceanian countries, run the following script:
 ```bash
 python ingest_example_data.py
 ```
