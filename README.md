@@ -69,8 +69,8 @@ You should get a response similar to the following:
             "total_tokens": 756
           }
         },
-        "documents": [...]
-			}
+        "documents": ["..."]
+        }
     ]
   }
 }
