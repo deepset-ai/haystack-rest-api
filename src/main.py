@@ -6,9 +6,6 @@ import uuid
 from fastapi import FastAPI, UploadFile, File
 from haystack import Pipeline
 
-# TODO: Remove this import once the deserialization issue is fixed (https://github.com/deepset-ai/haystack/issues/6473)
-from elasticsearch_haystack.document_store import ElasticsearchDocumentStore
-
 
 app = FastAPI(title="My Haystack RAG API")
 
