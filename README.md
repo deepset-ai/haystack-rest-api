@@ -4,10 +4,7 @@ This repository contains a simple Haystack RAG application with a REST API for i
 
 The application includes two containers:
 - An Elasticsearch container
-- A REST API container: built on FastAPI, this container integrates the Haystack logic. It incorporates:
-  - `ElasticsearchDocumentStore` to store documents
-  - Keyword-based `ElasticsearchBM25Retriever` to retrieve relevant documents
-  - OpenAI `GPTGenerator` to generate answers
+- A REST API container: built on FastAPI, this container integrates the Haystack logic and uses pipelines for indexing and querying. You can look at the [pipelines YAML files](./src/pipelines/) to see how the application is configured.
 
 You can find more information in the [Haystack documentation](add a link when availaible).
 
