@@ -29,7 +29,7 @@ def test_application():
 
     assert answer["query"] == query
     assert "data" in answer
-    assert "metadata" in answer
+    assert "meta" in answer
 
     # check that the Documents have been correctly retrieved and used
     assert "documents" in answer
