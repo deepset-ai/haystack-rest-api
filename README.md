@@ -1,3 +1,8 @@
+> [!WARNING]
+> This repository contained examples to show how to serve Haystack pipelines behind a rest api.
+> Since then we introduced [Hayhooks](https://github.com/deepset-ai/hayhooks/) which offers this
+> functionality explicitly and comprehensively.
+
 # haystack-rest-api
 
 This repository contains a simple Haystack RAG application with a REST API for indexing and querying purposes.
